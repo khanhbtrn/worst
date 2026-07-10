@@ -9,13 +9,16 @@ A joke signup page that deliberately violates every UX/UI principle. **Do not us
 
 ## Deploy to Vercel
 
-Static site — no build step. Push to `main` or run:
+**One-click import:** [Deploy on Vercel](https://vercel.com/new/clone?repository-url=https://github.com/khanhbtrn/worst&project-name=probably-fine)
+
+Or via CLI (needs a [Vercel token](https://vercel.com/account/tokens)):
 
 ```bash
+export VERCEL_TOKEN="your_token"
 npx vercel deploy --prod --yes
 ```
 
-Requires `VERCEL_TOKEN` (and optionally `VERCEL_ORG_ID` / `VERCEL_PROJECT_ID`) in your environment or GitHub Actions secrets.
+GitHub Actions auto-deploys on push when these repo secrets are set: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
 
 ## What's awful (v2)
 
