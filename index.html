@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — Probably Fine™</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Cookie wall that never really goes away -->
+  <div id="cookie-monster" class="cookie-wall" aria-hidden="false">
+    <div class="cookie-inner">
+      <h2>🍪 WE NEED YOUR SOUL (cookies)</h2>
+      <p class="marquee-wrap"><marquee scrollamount="18">By continuing you agree to let us email your grandmother, sell your dreams, and rename your pets. This banner cannot be dismissed. Probably.</marquee></p>
+      <div class="cookie-buttons">
+        <button id="decline-cookies" class="btn-huge btn-decline">Decline &amp; Leave Forever</button>
+        <button id="accept-cookies" class="btn-micro btn-accept" title="Good luck clicking this">Accept Everything</button>
+      </div>
+      <p class="cookie-fine-print">Decline does nothing. Accept shrinks the banner by 2px.</p>
+    </div>
+  </div>
+
+  <!-- Permanent tooltip blocking the header -->
+  <div class="blocking-tooltip" role="tooltip">
+  ℹ️ TIP: The close button is somewhere. Good luck finding it. (It's not on this page.)
+  </div>
+
+  <!-- Fake loading overlay -->
+  <div id="loading-hell" class="loading-overlay">
+    <div class="spinner-hell"></div>
+    <p id="loading-text">Loading your disappointment...</p>
+    <div class="fake-progress">
+      <div id="fake-progress-bar" class="fake-progress-bar"></div>
+    </div>
+    <p class="loading-sub">Please wait. Or don't. We can't stop you, but we'll try.</p>
+  </div>
+
+  <!-- Mystery modal #1 -->
+  <div id="welcome-modal" class="modal modal-hell" style="display:none;">
+    <div class="modal-content modal-wobble">
+      <h1 class="blink">⚠️ WELCOME ⚠️</h1>
+      <p>Before you can use this app, answer this simple question:</p>
+      <p class="riddle"><em>"What is the air-speed velocity of an unladen swallow?"</em></p>
+      <input type="text" id="riddle-answer" placeholder="Type 'close' to close (lie)" autocomplete="off" />
+      <div class="modal-actions">
+        <button id="riddle-submit" class="btn btn-primary">Submit Answer</button>
+        <button id="riddle-skip" class="btn btn-ghost">Skip (disabled)</button>
+      </div>
+      <p id="riddle-feedback" class="feedback"></p>
+    </div>
+  </div>
+
+  <!-- Mystery modal #2 - appears randomly -->
+  <div id="survey-modal" class="modal modal-hell modal-offset" style="display:none;">
+    <div class="modal-content">
+      <h2>Quick 47-question survey!</h2>
+      <p>On a scale of 1 to 10, how annoyed are you RIGHT NOW?</p>
+      <input type="range" id="annoyance-slider" min="1" max="10" value="1" />
+      <label for="annoyance-slider" class="label-below">Your annoyance level (slider is inverted)</label>
+      <button id="survey-close" class="btn btn-flee">Close Survey</button>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <h1 class="logo-shake">Sign Up — Probably Fine™</h1>
+    <nav class="nav-hostile">
+      <a href="#" class="nav-link-fake-btn" onclick="return false;">Home</a>
+      <button class="nav-btn-fake-link" id="nav-about">About</button>
+      <span class="nav-dead">Contact</span>
+      <marquee class="nav-marquee" scrollamount="6">NEW: Now with 300% more frustration • Terms change every 4 seconds •</marquee>
+    </nav>
+  </header>
+
+  <main class="main-chaos">
+  <aside class="sidebar-useless">
+    <h3>Important Links</h3>
+    <ul>
+      <li><a href="#nowhere">FAQ (404)</a></li>
+      <li><a href="#also-nowhere">Support (hold music)</a></li>
+      <li><a href="#nope">Privacy (we peek)</a></li>
+    </ul>
+    <div class="rotating-ad">
+      <p>🔥 HOT SINGLES IN YOUR RAM 🔥</p>
+    </div>
+  </aside>
+
+  <section class="form-section">
+    <div class="progress-hostile">
+      <span>Step <span id="step-num">7</span> of 3</span>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill" style="width: 140%"></div>
+      </div>
+    </div>
+
+    <form id="signup-form" autocomplete="off" novalidate>
+      <fieldset>
+        <legend class="legend-tiny">Create your account (all fields optional*)</legend>
+        <p class="fine-print">* All fields required. Asterisk means nothing here.</p>
+
+        <div class="field field-reverse">
+          <input type="email" id="email" name="email" required placeholder=" " />
+          <label for="email">Email Address (put it in the username field)</label>
+        </div>
+
+        <div class="field field-reverse">
+          <input type="text" id="username" name="username" required placeholder=" " />
+          <label for="username">Username (actually your password)</label>
+        </div>
+
+        <div class="field field-reverse">
+          <input type="text" id="password" name="password" required placeholder=" " />
+          <label for="password">Password (visible to everyone)</label>
+          <button type="button" id="toggle-pw" class="btn-inline btn-flee">Hide password (does opposite)</button>
+        </div>
+
+        <div class="field field-reverse">
+          <input type="password" id="secret" name="secret" placeholder=" " />
+          <label for="secret">Secret thoughts (we log these)</label>
+        </div>
+
+        <div class="captcha-hell">
+          <p>Select all squares containing <strong id="captcha-target">hope</strong>:</p>
+          <div id="captcha-grid" class="captcha-grid"></div>
+          <button type="button" id="captcha-refresh" class="btn btn-flee">New puzzle (resets form)</button>
+        </div>
+
+        <div class="field checkbox-hostile">
+          <label>
+            <input type="checkbox" id="terms" name="terms" />
+            I have read and agree to the <a href="#" onclick="alert('Terms: you lose.'); return false;">7,000 page terms</a>
+          </label>
+          <label>
+            <input type="checkbox" id="newsletter" name="newsletter" checked />
+            Send me hourly newsletters (cannot uncheck)
+          </label>
+        </div>
+
+        <div class="volume-hell">
+          <label for="volume">Comfort level:</label>
+          <input type="range" id="volume" min="0" max="100" value="50" />
+          <span id="volume-label">50% (inverted)</span>
+        </div>
+
+        <div class="button-row">
+          <button type="submit" id="submit-btn" class="btn btn-submit btn-flee" disabled>
+            Submit Application (requires 3 wrong captcha attempts)
+          </button>
+          <button type="reset" class="btn btn-reset btn-flee">Clear nothing</button>
+          <button type="button" id="dark-mode" class="btn btn-flee">🌙 Dark Mode (makes it worse)</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <div id="success-toast" class="toast toast-hidden">
+      ✅ Submitted! (not really — nothing was saved)
+    </div>
+  </section>
+  </main>
+
+  <footer class="footer-hell">
+    <marquee scrollamount="3" direction="right">© 1997-2026 Probably Fine Inc. • Best viewed in Netscape Navigator at 640×480 •</marquee>
+    <p class="footer-links">
+      <button class="footer-fake-link">Legal</button> |
+      <a href="#" class="footer-fake-btn" onclick="return false;">Careers</a> |
+      <span class="footer-dead-link">Unsubscribe</span>
+    </p>
+  </footer>
+
+  <div id="cursor-trail"></div>
+  <div id="notification-spam"></div>
+
+  <audio id="beep" preload="auto"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
