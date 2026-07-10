@@ -2,27 +2,34 @@
 
 A joke signup page that deliberately violates every UX/UI principle. **Do not use this as a design reference.**
 
-## How to run
+## Live demo
 
-Open `index.html` in a browser, or serve locally:
+- **Vercel:** Deployed via GitHub → Vercel (see below)
+- **Local:** `python3 -m http.server 8080` → http://localhost:8080
+
+## Deploy to Vercel
+
+Static site — no build step. Push to `main` or run:
 
 ```bash
-python3 -m http.server 8080
+npx vercel deploy --prod --yes
 ```
 
-Then visit http://localhost:8080
+Requires `VERCEL_TOKEN` (and optionally `VERCEL_ORG_ID` / `VERCEL_PROJECT_ID`) in your environment or GitHub Actions secrets.
 
-## What makes it awful
+## What's awful (v2)
 
-- Full-screen cookie wall that never fully dismisses
-- Blocking tooltip over the header
-- Fake loading screen with a progress bar that goes backwards
-- Monty Python riddle modal you can't easily close
-- Buttons that flee when you hover
-- Inverted sliders, wrong field labels, visible passwords
-- CAPTCHA that resets the form when you solve it correctly
-- Triple confirm dialogs, random security popups
-- Notification spam, cursor emoji trail, scroll hijacking
-- Comic Sans + Papyrus + Times New Roman + flashing gradients
+- Rage meter that fills as you suffer (max rage = chaos mode)
+- Clippy-style paperclip with terrible advice
+- Live chat bot that ignores you and spams messages
+- Rigged prize wheel (always "TRY AGAIN")
+- Rate-us modal — only 5 stars accepted, "later" returns in 10s
+- Fake pull-to-refresh on mobile
+- Phone vibration + screen flash on tap
+- Fake low-battery warning
+- Phone digits stolen into the email field
+- Mood dropdown that resets itself
+- Clown mode + Konami code easter egg
+- Everything from v1: fleeing buttons, cookie wall, hostile captcha, etc.
 
 Enjoy your discomfort.

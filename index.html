@@ -141,12 +141,29 @@
           <span id="volume-label">50% (inverted)</span>
         </div>
 
+        <div class="field field-reverse">
+          <input type="tel" id="phone" name="phone" placeholder=" " />
+          <label for="phone">Phone (digits appear in email field)</label>
+        </div>
+
+        <div class="field">
+          <label for="mood">How are you feeling?</label>
+          <select id="mood" name="mood">
+            <option value="">— Select —</option>
+            <option value="fine">Fine</option>
+            <option value="great">Great</option>
+            <option value="super">Super</option>
+          </select>
+          <p id="mood-hint" class="mood-hint">Selection ignored. We assume "miserable."</p>
+        </div>
+
         <div class="button-row">
           <button type="submit" id="submit-btn" class="btn btn-submit btn-flee" disabled>
             Submit Application (requires 3 wrong captcha attempts)
           </button>
           <button type="reset" class="btn btn-reset btn-flee">Clear nothing</button>
           <button type="button" id="dark-mode" class="btn btn-flee">🌙 Dark Mode (makes it worse)</button>
+          <button type="button" id="clown-mode" class="btn btn-flee">🤡 Clown Mode</button>
         </div>
       </fieldset>
     </form>
@@ -166,8 +183,77 @@
     </p>
   </footer>
 
+  <!-- Rage meter -->
+  <div id="rage-meter" class="rage-meter" title="Your suffering is being measured">
+    <span class="rage-label">RAGE</span>
+    <div class="rage-track"><div id="rage-fill" class="rage-fill"></div></div>
+    <span id="rage-pct" class="rage-pct">0%</span>
+  </div>
+
+  <!-- Clippy -->
+  <div id="clippy" class="clippy">
+    <div class="clippy-bubble" id="clippy-bubble">It looks like you're trying to leave. Don't.</div>
+    <div class="clippy-char">📎</div>
+  </div>
+
+  <!-- Fake live chat -->
+  <div id="chat-widget" class="chat-widget">
+    <button id="chat-toggle" class="chat-toggle btn-flee">💬 Help (not really)</button>
+    <div id="chat-panel" class="chat-panel chat-hidden">
+      <div class="chat-header">
+        <span>Support Bot 9000</span>
+        <button id="chat-close" class="chat-close-x" title="Close">✕</button>
+      </div>
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Type your despair..." />
+        <button id="chat-send" class="btn btn-flee">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rigged prize wheel -->
+  <button id="wheel-trigger" class="wheel-trigger btn-flee">🎰 WIN $1,000,000!</button>
+  <div id="wheel-modal" class="modal modal-hell" style="display:none;">
+    <div class="modal-content wheel-content">
+      <h2>Spin to Win!</h2>
+      <div id="wheel" class="prize-wheel">
+        <div class="wheel-pointer">▼</div>
+        <div id="wheel-spinner" class="wheel-spinner"></div>
+      </div>
+      <button id="wheel-spin" class="btn btn-flee">SPIN!</button>
+      <p id="wheel-result" class="wheel-result"></p>
+      <button id="wheel-close" class="btn btn-flee wheel-close-btn">Claim Prize</button>
+    </div>
+  </div>
+
+  <!-- Rate us modal -->
+  <div id="rate-modal" class="modal modal-hell rate-modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Enjoying Probably Fine™?</h2>
+      <p>Please rate us 5 stars or we'll ask again in 10 seconds.</p>
+      <div class="star-row" id="star-row">
+        <button class="star-btn" data-stars="1">⭐</button>
+        <button class="star-btn" data-stars="2">⭐⭐</button>
+        <button class="star-btn" data-stars="3">⭐⭐⭐</button>
+        <button class="star-btn star-tiny" data-stars="4">⭐</button>
+        <button class="star-btn star-micro" data-stars="5" title="5 stars">·</button>
+      </div>
+      <button id="rate-later" class="btn btn-flee">Maybe later (not an option)</button>
+    </div>
+  </div>
+
+  <!-- Fake pull-to-refresh -->
+  <div id="pull-refresh" class="pull-refresh">↓ Release to refresh (does nothing) ↓</div>
+
+  <!-- Fake battery warning -->
+  <div id="battery-warning" class="battery-warning" style="display:none;">
+    ⚠️ Low battery! (fake) — Enable notifications to fix. (won't fix)
+  </div>
+
   <div id="cursor-trail"></div>
   <div id="notification-spam"></div>
+  <div id="flash-overlay" class="flash-overlay"></div>
 
   <audio id="beep" preload="auto"></audio>
 

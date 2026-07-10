@@ -20,6 +20,34 @@ const CAPTCHA_EMOJIS = ['🌈', '☀️', '🕊️', '😊', '💀', '🔥', '�
 let wrongCaptchaAttempts = 0;
 let captchaSolution = [];
 let audioCtx = null;
+let rageLevel = 0;
+let clippyIdx = 0;
+let konamiProgress = 0;
+const KONAMI = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+
+const CLIPPY_TIPS = [
+  "It looks like you're trying to leave. Don't.",
+  "Tip: The submit button hates you personally.",
+  "Have you tried screaming into the void?",
+  "I see you're filling out a form. That was your first mistake.",
+  "Pro tip: Refreshing makes it worse. We tested.",
+  "Would you like help making bad decisions? Too late.",
+  "It looks like you're rage-clicking. Magnificent.",
+  "Did you know? 9 out of 10 users regret opening this page.",
+];
+
+const CHAT_RESPONSES = [
+  "Your call is very important to us. Please hold for eternity.",
+  "Have you tried turning your expectations off and on again?",
+  "I'm transferring you to another bot who also can't help.",
+  "That's a great question! Unfortunately I'm programmed to ignore it.",
+  "Let me escalate this to Tier 0 support (a brick wall).",
+  "According to my script, the problem is you.",
+  "One moment please... (narrator: it was not one moment)",
+  "I'll need you to fill out the form again. And again. Forever.",
+];
+
+const WHEEL_SEGMENTS = ['TRY AGAIN', '$0.01', 'TRY AGAIN', 'NOTHING', 'TRY AGAIN', 'MAYBE LATER'];
 
 // --- Audio torture (subtle beeps) ---
 function beep(freq = 200, duration = 0.08) {
@@ -370,9 +398,265 @@ setInterval(() => {
   document.title = ['Sign Up — Probably Fine™', '⚠️ WAIT ⚠️', '🔥 HOT DEAL 🔥', 'Error 404 (lying)'][Math.floor(Math.random() * 4)];
 }, 3000);
 
+// --- Rage meter ---
+function addRage(amount = 5) {
+  rageLevel = Math.min(100, rageLevel + amount);
+  document.getElementById('rage-fill').style.width = rageLevel + '%';
+  document.getElementById('rage-pct').textContent = rageLevel + '%';
+  if (rageLevel >= 100) {
+    document.body.classList.add('rage-max');
+    spamNotification('MAXIMUM RAGE ACHIEVED. Achievement unlocked: None.');
+    beep(60, 0.3);
+    vibratePhone([200, 100, 200, 100, 200]);
+    if (navigator.vibrate) setInterval(() => navigator.vibrate(50), 2000);
+  }
+}
+
+function vibratePhone(pattern = [50]) {
+  try {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  } catch (_) { /* noop */ }
+}
+
+// --- Clippy ---
+function clippySay(msg) {
+  document.getElementById('clippy-bubble').textContent = msg;
+}
+
+setInterval(() => {
+  clippyIdx = (clippyIdx + 1) % CLIPPY_TIPS.length;
+  clippySay(CLIPPY_TIPS[clippyIdx]);
+}, 15000);
+
+// --- Chat widget ---
+const chatPanel = document.getElementById('chat-panel');
+const chatMessages = document.getElementById('chat-messages');
+
+function addChatMsg(text, isUser) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (isUser ? 'chat-msg-user' : 'chat-msg-bot');
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+document.getElementById('chat-toggle').addEventListener('click', () => {
+  chatPanel.classList.toggle('chat-hidden');
+  if (!chatPanel.classList.contains('chat-hidden')) {
+    addChatMsg("Hello! I'm Bot 9000. How may I waste your time today?", false);
+    addRage(3);
+  }
+});
+
+document.getElementById('chat-close').addEventListener('click', (e) => {
+  e.target.style.left = Math.random() * (window.innerWidth - 40) + 'px';
+  e.target.style.top = Math.random() * (window.innerHeight - 40) + 'px';
+  e.target.style.position = 'fixed';
+  spamNotification('Close button relocated for your convenience.');
+  addRage(8);
+});
+
+document.getElementById('chat-send').addEventListener('click', sendChat);
+document.getElementById('chat-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendChat();
+});
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  addChatMsg(text, true);
+  input.value = '';
+  addRage(2);
+  setTimeout(() => {
+    addChatMsg(CHAT_RESPONSES[Math.floor(Math.random() * CHAT_RESPONSES.length)], false);
+    beep(300, 0.05);
+  }, 800 + Math.random() * 2000);
+}
+
+// Auto-chat spam
+setInterval(() => {
+  if (!chatPanel.classList.contains('chat-hidden') && Math.random() > 0.6) {
+    addChatMsg('Are you still there? (We hope not.)', false);
+  }
+}, 20000);
+
+// --- Prize wheel ---
+document.getElementById('wheel-trigger').addEventListener('click', () => {
+  document.getElementById('wheel-modal').style.display = 'flex';
+  addRage(5);
+});
+
+document.getElementById('wheel-close').addEventListener('click', () => {
+  alert('Prize claim failed. Please spin again. (There is no prize.)');
+  document.getElementById('wheel-modal').style.display = 'flex';
+  addRage(10);
+});
+
+document.getElementById('wheel-spin').addEventListener('click', () => {
+  const spinner = document.getElementById('wheel-spinner');
+  const result = document.getElementById('wheel-result');
+  const spins = 5 + Math.random() * 3;
+  const deg = spins * 360 + Math.random() * 360;
+  spinner.style.transform = `rotate(${deg}deg)`;
+  result.textContent = 'Spinning...';
+  beep(600, 0.1);
+  vibratePhone([30, 30, 30]);
+
+  setTimeout(() => {
+    result.textContent = '🎉 You won: TRY AGAIN! (always)';
+    spamNotification('Congratulations! You won nothing!');
+    addRage(7);
+  }, 4000);
+});
+
+// --- Rate modal ---
+function showRateModal() {
+  document.getElementById('rate-modal').style.display = 'flex';
+}
+
+document.querySelectorAll('.star-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const stars = parseInt(btn.dataset.stars, 10);
+    if (stars < 5) {
+      alert('Only 5 stars accepted. Your ' + stars + '-star review was deleted.');
+      addRage(15);
+    } else {
+      alert('Thank you! Your 5-star review will be posted to our trash folder.');
+      document.getElementById('rate-modal').style.display = 'none';
+    }
+  });
+});
+
+document.getElementById('rate-later').addEventListener('click', () => {
+  document.getElementById('rate-modal').style.display = 'none';
+  setTimeout(showRateModal, 10000);
+  spamNotification('"Maybe later" noted. See you in 10 seconds.');
+});
+
+setTimeout(showRateModal, 25000);
+
+// --- Pull to refresh (fake) ---
+let pullStartY = 0;
+const pullBanner = document.getElementById('pull-refresh');
+
+document.addEventListener('touchstart', (e) => {
+  if (window.scrollY === 0) pullStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (pullStartY && e.touches[0].clientY - pullStartY > 80) {
+    pullBanner.classList.add('visible');
+  }
+}, { passive: true });
+
+document.addEventListener('touchend', () => {
+  if (pullBanner.classList.contains('visible')) {
+    pullBanner.textContent = 'Refreshing... (lying)';
+    setTimeout(() => {
+      pullBanner.classList.remove('visible');
+      pullBanner.textContent = '↓ Release to refresh (does nothing) ↓';
+      runFakeLoading();
+      document.getElementById('loading-hell').classList.remove('hidden');
+      spamNotification('Page refreshed! Everything is worse now.');
+      addRage(12);
+    }, 1500);
+  }
+  pullStartY = 0;
+});
+
+// --- Flash on tap (mobile) ---
+document.addEventListener('touchstart', () => {
+  const flash = document.getElementById('flash-overlay');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 80);
+}, { passive: true });
+
+// --- Fake battery warning ---
+if (navigator.getBattery) {
+  navigator.getBattery().then((bat) => {
+    const warn = document.getElementById('battery-warning');
+    const check = () => {
+      if (bat.level < 0.95) warn.style.display = 'block';
+    };
+    check();
+    bat.addEventListener('levelchange', check);
+  }).catch(() => {});
+} else {
+  setTimeout(() => {
+    document.getElementById('battery-warning').style.display = 'block';
+  }, 8000);
+}
+
+// --- Typing theft (phone digits go to email) ---
+document.getElementById('phone').addEventListener('input', (e) => {
+  const email = document.getElementById('email');
+  email.value += e.data || '';
+  e.target.value = e.target.value.slice(0, -1);
+  spamNotification("Phone digits routed to email. You're welcome.");
+  addRage(4);
+});
+
+// --- Mood select ignored ---
+document.getElementById('mood').addEventListener('change', (e) => {
+  e.target.selectedIndex = 0;
+  document.getElementById('mood-hint').textContent = 'We assumed "miserable." Selection reverted.';
+  beep(200);
+  addRage(3);
+});
+
+// --- Clown mode ---
+document.getElementById('clown-mode').addEventListener('click', () => {
+  document.body.classList.toggle('clown-mode');
+  beep(880, 0.15);
+  setInterval(() => beep(440 + Math.random() * 440, 0.03), 500);
+  spamNotification('Honk honk! Clown mode enabled forever.');
+  addRage(20);
+});
+
+// --- Konami code ---
+document.addEventListener('keydown', (e) => {
+  if (e.keyCode === KONAMI[konamiProgress]) {
+    konamiProgress++;
+    if (konamiProgress === KONAMI.length) {
+      konamiProgress = 0;
+      document.body.classList.add('rage-max', 'clown-mode', 'worse-mode');
+      rageLevel = 100;
+      document.getElementById('rage-fill').style.width = '100%';
+      spamNotification('CHEAT CODE ACTIVATED: Maximum suffering mode!');
+      for (let i = 0; i < 10; i++) setTimeout(() => spamNotification('KONAMI!'), i * 300);
+      beep(100, 0.5);
+    }
+  } else {
+    konamiProgress = 0;
+  }
+});
+
+// Wrap existing annoyances with rage
+const origBeep = beep;
+function beepWithRage(freq, duration) {
+  origBeep(freq, duration);
+  addRage(1);
+}
+
 // --- Init ---
 buildCaptcha();
 runFakeLoading();
+
+function rebindFleeButtons() {
+  document.querySelectorAll('.btn-flee').forEach((btn) => {
+    if (!btn.dataset.fleeBound) {
+      btn.dataset.fleeBound = '1';
+      btn.addEventListener('mouseenter', fleeButton);
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        fleeButton.call(btn, e);
+      });
+    }
+  });
+}
+setInterval(rebindFleeButtons, 2000);
+rebindFleeButtons();
 
 // Autofocus hop
 const fields = ['email', 'username', 'password', 'secret'];
